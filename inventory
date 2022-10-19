@@ -1,3 +1,5 @@
-[nagios]
-Server_1
-CentOS
+[nagios4-Ubuntu]
+server_1
+
+[nagios4-CentOS]
+Cent-OS

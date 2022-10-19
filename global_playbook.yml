@@ -1,25 +1,40 @@
 ---
-#Penas
+
 - hosts: all
   become: true
   pre_tasks:
 
-  - name: Update repository index (CentOS)
-    tags: always
-    dnf:
-      update_cache: yes
-    when: ansible_distribution == "CentOS"
-
-  - name: Install Updates (CentOS)
-    tags: always
-    dnf:
-      update_only: yes
-      update_cache: yes
-    when: ansible_distribution == "CentOS"
-
-  - name: Install Updates (Ubuntu)
-    tags: always
+  - name: Update and upgrade remote in Ubuntu servers
     apt:
-      update_cache: yes
-    changed_when: false
+#      update_cache: yes
+      upgrade: 'yes'
     when: ansible_distribution == "Ubuntu"
+
+  - name: Installing dnf and epel-release
+    yum:
+      name:
+        - epel-release
+        - dnf
+    when: ansible_distribution == "CentOS"
+
+  - name: Update and upgrade remote CentOS server
+    dnf:
+      update_cache: yes
+      name:  "*"
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: Dpkg fixing in Ubuntu Servers
+    shell: |
+      dpkg --configure -a
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: nagios4-Ubuntu
+  become: true
+  roles:
+    - nagios4-Ubuntu
+
+- hosts: nagios4-CentOS
+  become: true
+  roles:
+    - nagios4-CentOS
