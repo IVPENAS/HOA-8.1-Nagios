@@ -6,7 +6,7 @@
 
   - name: Update and upgrade remote in Ubuntu servers
     apt:
-#      update_cache: yes
+      update_cache: yes
       upgrade: 'yes'
     when: ansible_distribution == "Ubuntu"
 
